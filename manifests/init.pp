@@ -26,8 +26,6 @@
 #   Turn on debug mode
 #
 class foreman_network (
-  Array $foreman_interfaces = $::foreman_interfaces,
-  Array $searchpath = [ $::domainname ],
   Array $nameservers,
   Boolean $nameservers_merge,
   Boolean $manage_resolv_conf,
@@ -35,7 +33,9 @@ class foreman_network (
   Boolean $mange_network_interface_restart,
   Boolean $manage_if_from_facts_only,
   Stdlib::Compat::Absolute_path $resolv_conf_path,
-  Boolean $debug
+  Boolean $debug,
+  Array $foreman_interfaces = $::foreman_interfaces,
+  Array $searchpath = [ $::domainname ],
 ) {
 
   # get default route and resolv.conf data from the primary foreman interface
@@ -134,7 +134,7 @@ class foreman_network (
       ) {
         network_config { $interface:
           *      => $config,
-          notify => Foreman_networking::Network_restart[$interface]
+          notify => Foreman_network::Network_restart[$interface]
         }
       } else {
         warning("The interface: ${interface} does not exist in facts['networking']['interfaces'] or is a dhcp interface")
@@ -156,7 +156,7 @@ class foreman_network (
       } else {
         network_route { $route:
           *      => $config,
-          notify => Foreman_networking::Network_restart[$config['interface']]
+          notify => Foreman_network::Network_restart[$config['interface']]
         }
       }
     } else {

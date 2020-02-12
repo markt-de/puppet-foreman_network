@@ -1,6 +1,6 @@
 {
   "name": "andeman-foreman_network",
-  "version": "1.0",
+  "version": "1.0.0",
   "author": "Andreas Stürz",
   "summary": "Puppet Module to configure network interfaces, routes and resolv.conf with Foreman ENC network interface data",
   "license": "Apache-2.0",

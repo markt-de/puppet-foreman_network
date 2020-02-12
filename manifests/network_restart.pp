@@ -1,9 +1,12 @@
-# @summary Contains the logic to
+# @summary Restart a network interface
 #
-# A description of what this defined type does
+# Apply configuration changes for a network interface
 #
-# @example
-#   foreman_network::network_restart { 'namevar': }
+# @param interface
+#   The network interface identifier eg. eth0
+# @param mange_network_interface_restart
+#   if true the network interface will be restarted
+#
 define foreman_network::network_restart (
   String $interface,
   Boolean $mange_network_interface_restart = $foreman_network::mange_network_interface_restart

@@ -63,10 +63,10 @@ describe 'foreman_network' do
           )
           is_expected.to contain_class('resolv_conf')
 
-          is_expected.to contain_network_config('eth0').that_notifies('Foreman_networking::Network_restart[eth0]')
-          is_expected.to contain_network_config('eth1').that_notifies('Foreman_networking::Network_restart[eth1]')
-          is_expected.to contain_network_config('eth2').that_notifies('Foreman_networking::Network_restart[eth2]')
-          is_expected.to contain_network_route('0.0.0.0/0').that_notifies('Foreman_networking::Network_restart[eth0]')
+          is_expected.to contain_network_config('eth0').that_notifies('Foreman_network::Network_restart[eth0]')
+          is_expected.to contain_network_config('eth1').that_notifies('Foreman_network::Network_restart[eth1]')
+          is_expected.to contain_network_config('eth2').that_notifies('Foreman_network::Network_restart[eth2]')
+          is_expected.to contain_network_route('0.0.0.0/0').that_notifies('Foreman_network::Network_restart[eth0]')
         }
       end
 
@@ -106,8 +106,8 @@ describe 'foreman_network' do
             'network'   => '10.1.2.0',
           )
           is_expected.to contain_class('resolv_conf')
-          is_expected.to contain_network_route('0.0.0.0/0').that_notifies('Foreman_networking::Network_restart[eth0]')
-          is_expected.to contain_network_route('10.1.2.0/24').that_notifies('Foreman_networking::Network_restart[eth0]')
+          is_expected.to contain_network_route('0.0.0.0/0').that_notifies('Foreman_network::Network_restart[eth0]')
+          is_expected.to contain_network_route('10.1.2.0/24').that_notifies('Foreman_network::Network_restart[eth0]')
         }
       end
     end
