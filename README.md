@@ -1,87 +1,272 @@
 # foreman_network
 
-Welcome to your new module. A short overview of the generated parts can be found in the PDK documentation at https://puppet.com/pdk/latest/pdk_generating_modules.html .
-
-The README template below provides a starting point with details about what information to include in your README.
-
 #### Table of Contents
 
-1. [Description](#description)
-2. [Setup - The basics of getting started with foreman_network](#setup)
-    * [What foreman_network affects](#what-foreman_network-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with foreman_network](#beginning-with-foreman_network)
-3. [Usage - Configuration options and additional functionality](#usage)
-4. [Limitations - OS compatibility, etc.](#limitations)
-5. [Development - Guide for contributing to the module](#development)
+- [Overview](#overview)
+- [Requirements](#requirements)
+  * [Beginning with foreman_network](#beginning-with-foreman-network)
+- [Usage](#usage)
+  * [Install and enable foreman_network](#install-and-enable-foreman-network)
+  * [Declare foreman_network](#declare-foreman-network)
+  * [Configure nameservers](#configure-nameservers)
+    + [Additional nameservers](#additional-nameservers)
+    + [Custom nameservers](#custom-nameservers)
+  * [Overwrite network routes](#overwrite-network-routes)
+    + [Add static route and overwrite the default gateway on interface eth0](#add-static-route-and-overwrite-the-default-gateway-on-interface-eth0)
+- [Reference](#reference)
+- [Limitations](#limitations)
+- [Development](#development)
+  * [Setup testing and development environment (MacOSX)](#setup-testing-and-development-environment--macosx-)
+  * [Running acceptance tests](#running-acceptance-tests)
+  * [Running unit tests](#running-unit-tests)
+  * [Updating documentation](#updating-documentation)
+- [Release Notes](#release-notes)
 
-## Description
 
-Briefly tell users why they might want to use your module. Explain what your module does and what kind of problems users can solve with it.
+## Overview
 
-This should be a fairly short description helps the user decide if your module is what they want.
+This module configures network interfaces, network routes and resolv.conf from Foreman ENC (external node classifier) node parameters.
 
-## Setup
+Basically it parses the foreman_interfaces and domainname node parameters from foreman and pass it to other puppet modules to configure the settings.
 
-### What foreman_network affects **OPTIONAL**
+More information about foreman: https://theforeman.org/
 
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
+Information about Puppet ENC (external node classifier): https://puppet.com/docs/puppet/latest/nodes_external.html
 
-If there's more that they should know about, though, this is the place to mention:
+## Requirements
 
-* Files, packages, services, or operations that the module will alter, impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled, another module, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you might want to include an additional "Upgrading" section here.
+* Puppet >= 4.10.0 < 7.0.0
+* [puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib)
+* [puppet/network](https://github.com/voxpupuli/puppet-network)
+* [saz/resolv_conf](https://github.com/saz/puppet-resolv_conf)
 
 ### Beginning with foreman_network
-
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
+All parameters for the module are contained within the main class, so for any function of the module, set the options you want. All configuration parameters can be assigned hiera. The default values are also lookuped up by hiera. See the common usages below for examples.
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your users how to use your module to solve problems, and be sure to include code examples. Include three to five examples of the most important or common tasks a user can accomplish with your module. Show users how to accomplish more complex tasks that involve different types, classes, and functions working in tandem.
+### Install and enable foreman_network
+```
+include foreman_network
+```
+
+### Declare foreman_network 
+To get foreman_network up and running just declare the class.
+
+```
+class { 'foreman_network': }
+```
+
+Declare the class with default values:
+```
+class { 'foreman_network':
+  nameservers                     => [],
+  nameservers_merge               => true,
+  manage_resolv_conf              => true,
+  route_overrides                 => {},
+  mange_network_interface_restart => true,
+  manage_if_from_facts_only       => true,
+  resolv_conf_path                => '/etc/resolv.conf',
+  debug                           => false,
+}
+```
+
+Using Hiera with default values:
+
+```
+foreman_network:
+  nameservers: []
+  nameservers_merge: true
+  manage_resolv_conf: true
+  route_overrides: {}
+  mange_network_interface_restart: true
+  manage_if_from_facts_only: true
+  resolv_conf_path: /etc/resolv.conf
+  debug: false   
+```
+
+### Configure nameservers 
+
+**IMPORTANT: When the boot mode of the primary interface from foreman is a DHCP, the resolv.conf will be always unmanaged even when the parameter manage_resolv_conf is true.**
+
+#### Additional nameservers
+Foreman passes 2 nameservers via node parameters: dns_primary (eg. 1.1.1.1) and dns_secondary (eg. 2.2.2.2). 
+
+With the following configuration additional nameservers will be added via an unique merge:
+
+```
+class { 'foreman_network':
+  nameservers_merge  => true,
+  nameservers        => [
+    '1.1.1.1',
+    '8.8.8.8',
+    '4.4.4.4'
+  ],
+}
+```
+
+Using Hiera:
+
+```
+foreman_network:
+  nameservers_merge: true
+  nameservers:
+    - 8.8.8.8
+    - 4.4.4.4
+```
+
+The result in /etc/resolv.conf will be:
+```
+[...]
+nameserver 1.1.1.1
+nameserver 2.2.2.2
+nameserver 8.8.8.8
+nameserver 4.4.4.4
+[...]
+```
+
+#### Custom nameservers
+
+Use custom nameservers and ignore foreman nameservers with the following configuration
+
+```
+class { 'foreman_network':
+  nameservers_merge  => false,
+  nameservers        => [
+    '8.8.8.8',
+    '4.4.4.4'
+  ],
+}
+```
+
+Using Hiera:
+
+```
+foreman_network:
+  nameservers_merge: false
+  nameservers:
+    - 8.8.8.8
+    - 4.4.4.4
+```
+
+The result in /etc/resolv.conf will be:
+```
+[...]
+nameserver 8.8.8.8
+nameserver 4.4.4.4
+[...]
+```
+
+### Overwrite network routes
+
+**IMPORTANT: When the boot mode of the primary interface from foreman is a DHCP, all routes for this interface will be ignored**
+
+#### Add static route and overwrite the default gateway on interface eth0
+
+```
+class { 'foreman_network':
+  route_overrides => {
+    '0.0.0.0/0'   => {
+      'ensure'    => 'present',
+      'gateway'   => '10.241.60.253',
+      'interface' => 'eth0',
+      'netmask'   => '255.255.255.0',
+      'network'   => '10.241.60.0',
+    },
+    '10.1.2.0/24' => {
+      'ensure'    => 'present',
+      'gateway'   => '10.1.2.254',
+      'interface' => 'eth0',
+      'netmask'   => '255.255.255.0',
+      'network'   => '10.1.2.0',
+    },
+  }
+}
+```
+
+Using Hiera:
+
+```
+foreman_network:
+  route_overrides:
+    0.0.0.0/24:
+      ensure: present
+      gateway: 10.241.60.253
+      interface: eth0
+      netmask: 255.255.255.0
+      network: 10.241.60.0 
+    10.1.2.0/24:
+      ensure: present
+      gateway: 10.1.2.254
+      interface: eth0
+      netmask: 255.255.255.0
+      network: 10.1.2.0  
+```
 
 ## Reference
 
-This section is deprecated. Instead, add reference information to your code as Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your module. For details on how to add code comments and generate documentation with Strings, see the Puppet Strings [documentation](https://puppet.com/docs/puppet/latest/puppet_strings.html) and [style guide](https://puppet.com/docs/puppet/latest/puppet_strings_style.html)
-
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the root of your module directory and list out each of your module's classes, defined types, facts, functions, Puppet tasks, task plans, and resource types and providers, along with the parameters for each.
-
-For each element (class, defined type, function, and so on), list:
-
-  * The data type, if applicable.
-  * A description of what the element does.
-  * Valid values, if the data type doesn't make it obvious.
-  * Default value, if any.
-
-For example:
-
-```
-### `pet::cat`
-
-#### Parameters
-
-##### `meow`
-
-Enables vocalization in your cat. Valid options: 'string'.
-
-Default: 'medium-loud'.
-```
+See [REFERENCE.md](REFERENCE.md)
 
 ## Limitations
 
-In the Limitations section, list any incompatibilities, known issues, or other warnings.
+For a list of supported operating systems, see [metadata.json](metadata.json)
 
 ## Development
 
-In the Development section, tell other users the ground rules for contributing to your project and how they should submit their work.
+This module uses [puppet_litmus](https://github.com/puppetlabs/puppet_litmus) for development and acceptance testing.
 
-## Release Notes/Contributors/Etc. **Optional**
+### Setup testing and development environment (MacOSX)
 
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
+Install required software with [brew](https://brew.sh/)
+```
+brew cask install docker
+brew cask install puppetlabs/puppet/pdk
+brew cask install puppet-bolt
+brew install rbenv
+rbenv init
+echo 'eval "$(rbenv init -)"' >> $HOME/.zshrc
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-doctor | bash
+rbenv install 2.6.5
+```
+
+Install all needed gem dependencies:
+```
+./scripts/prepare_test_env.sh
+```
+
+### Running acceptance tests
+
+Create test environment:
+```
+./scripts/create_test_env.sh
+```
+
+Run the acceptance tests:
+```
+./scripts/run_tests.sh
+```
+
+Remove the test environment:
+```
+./scripts/remove_test_env.sh
+```
+
+### Running unit tests
+```
+pdk test unit
+```
+
+### Updating documentation
+
+Update REFERENCE.md
+```
+puppet strings generate --format markdown
+```
+
+Generate TOC
+
+https://ecotrust-canada.github.io/markdown-toc/
+
+## Release Notes
+
+See [CHANGELOG.md](CHANGELOG.md)
