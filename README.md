@@ -4,10 +4,10 @@
 
 - [Overview](#overview)
 - [Requirements](#requirements)
-  * [Beginning with foreman_network](#beginning-with-foreman-network)
+  * [Beginning with foreman_network](#beginning-with-foreman_network)
 - [Usage](#usage)
-  * [Install and enable foreman_network](#install-and-enable-foreman-network)
-  * [Declare foreman_network](#declare-foreman-network)
+  * [Install and enable foreman_network](#install-and-enable-foreman_network)
+  * [Declare foreman_network](#declare-foreman_network)
   * [Configure nameservers](#configure-nameservers)
     + [Additional nameservers](#additional-nameservers)
     + [Custom nameservers](#custom-nameservers)
