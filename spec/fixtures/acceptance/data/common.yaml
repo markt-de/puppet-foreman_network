@@ -1,0 +1,64 @@
+---
+foreman_interfaces:
+  - ip: 172.17.0.3
+    ip6:
+    mac: 00:1d:d8:b7:1c:17
+    name: test01.dmz.test.de
+    attrs:
+      bindings:
+        - address: 172.17.0.3
+          netmask: 255.255.0.0
+          network: 172.17.0.0
+      bindings6:
+        - address: fe80::21d:d8ff:feb7:1c17
+          netmask: 'ffff:ffff:ffff:ffff::'
+          network: 'fe80::'
+      mtu: 1500
+      netmask: 255.255.0.0
+      netmask6: 'ffff:ffff:ffff:ffff::'
+      network: 172.17.0.0
+      network6: 'fe80::'
+    virtual: false
+    link: true
+    identifier: eth0
+    managed: true
+    primary: true
+    provision: true
+    subnet:
+      name: DOCKERNET
+      network: 172.17.0.0
+      mask: 255.255.0.0
+      gateway: 172.17.0.1
+      dns_primary: 10.241.40.11
+      dns_secondary: 10.241.40.12
+      from: 172.17.3.1
+      to: 172.17.3.240
+      boot_mode: Static
+      ipam: DHCP
+      vlanid: 60
+      mtu: 1500
+      network_type: IPv4
+      description:
+    subnet6:
+    tag:
+    attached_to:
+    type: Interface
+nameservers:
+  - 192.168.65.1
+searchpath:
+  - dmz.test.de
+
+resolv_conf_path: /etc/resolv.conf.test_static
+route_overrides:
+  10.1.5.0/24:
+    ensure: present
+    gateway: 172.17.0.3
+    interface: eth0
+    netmask: 255.255.255.0
+    network: 10.1.5.0
+
+nameservers_merge: true
+manage_resolv_conf: true
+mange_network_interface_restart: true
+manage_if_from_facts_only: false
+

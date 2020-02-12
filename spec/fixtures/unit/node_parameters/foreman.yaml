@@ -1,0 +1,141 @@
+# Use default_module_facts.yml for module specific facts.
+#
+---
+parameters:
+  foreman_interfaces:
+    # Static Interface eth0
+    - ip: 10.241.60.21
+      ip6:
+      mac: 00:1d:d8:b7:1c:17
+      name: test.dmz.test.de
+      attrs:
+        bindings:
+          - address: 10.241.60.21
+            netmask: 255.255.255.0
+            network: 10.241.60.0
+        bindings6:
+          - address: fe80::21d:d8ff:feb7:1c17
+            netmask: 'ffff:ffff:ffff:ffff::'
+            network: 'fe80::'
+        mtu: 1500
+        netmask: 255.255.255.0
+        netmask6: 'ffff:ffff:ffff:ffff::'
+        network: 10.241.60.0
+        network6: 'fe80::'
+      virtual: false
+      link: true
+      identifier: eth0
+      managed: true
+      primary: true
+      provision: true
+      subnet:
+        name: DC1-DMZ1
+        network: 10.241.60.0
+        mask: 255.255.255.0
+        gateway: 10.241.60.254
+        dns_primary: 10.241.40.11
+        dns_secondary: 10.241.40.12
+        from: 10.241.60.1
+        to: 10.241.60.240
+        boot_mode: Static
+        ipam: DHCP
+        vlanid: 60
+        mtu: 1500
+        network_type: IPv4
+        description:
+      subnet6:
+      tag:
+      attached_to:
+      type: Interface
+    # Static Interface eth1
+    - ip: 10.241.90.104
+      ip6:
+      mac: 00:1a:4a:22:39:0f
+      name: test.stor.test.de
+      attrs:
+        bindings:
+          - address: 10.241.90.104
+            netmask: 255.255.255.0
+            network: 10.241.90.0
+        bindings6:
+          - address: fe80::21a:4aff:fe22:390f
+            netmask: 'ffff:ffff:ffff:ffff::'
+            network: 'fe80::'
+        mtu: 1500
+        netmask: 255.255.255.0
+        netmask6: 'ffff:ffff:ffff:ffff::'
+        network: 10.241.90.0
+        network6: 'fe80::'
+      virtual: false
+      link: true
+      identifier: eth1
+      managed: true
+      primary: false
+      provision: false
+      subnet:
+        name: DC1-STORAGE
+        network: 10.241.90.0
+        mask: 255.255.255.0
+        gateway: 10.241.90.254
+        dns_primary: 10.241.40.11
+        dns_secondary: 10.241.40.12
+        from: 10.241.90.100
+        to: 10.241.90.200
+        boot_mode: Static
+        ipam: DHCP
+        vlanid: 90
+        mtu: 1500
+        network_type: IPv4
+        description:
+      subnet6:
+      tag:
+      attached_to:
+      type: Interface
+    # DHCP Interface eth2
+    - ip: 10.50.1.210
+      ip6:
+      mac: 00:4a:04:02:00:08
+      name: test.mgmt.test.de
+      attrs:
+        bindings:
+          - address: 10.50.1.210
+            netmask: 255.255.255.0
+            network: 10.50.1.0
+        bindings6:
+          - address: fe80::24a:4ff:fe02:8
+            netmask: 'ffff:ffff:ffff:ffff::'
+            network: 'fe80::'
+        dhcp: 10.50.1.53
+        mtu: 1500
+        netmask: 255.255.255.0
+        netmask6: 'ffff:ffff:ffff:ffff::'
+        network: 10.50.1.0
+        network6: 'fe80::'
+      virtual: false
+      link: true
+      identifier: eth2
+      managed: true
+      primary: false
+      provision: true
+      subnet:
+        name: SERVER
+        network: 10.50.1.0
+        mask: 255.255.255.0
+        gateway: 10.50.1.254
+        dns_primary: 10.0.1.31
+        dns_secondary: 10.0.1.32
+        from: 10.50.1.200
+        to: 10.50.1.240
+        boot_mode: DHCP
+        ipam: DHCP
+        vlanid: 50
+        mtu: 1500
+        network_type: IPv4
+        description:
+      subnet6:
+      tag:
+      attached_to:
+      type: Interface
+  domainname: dmz.test.de
+classes: {}
+environment: production

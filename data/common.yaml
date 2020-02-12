@@ -1,0 +1,9 @@
+---
+foreman_network::nameservers: []
+foreman_network::nameservers_merge: true
+foreman_network::manage_resolv_conf: true
+foreman_network::route_overrides: {}
+foreman_network::mange_network_interface_restart: true
+foreman_network::manage_if_from_facts_only: true
+foreman_network::resolv_conf_path: /etc/resolv.conf
+foreman_network::debug: false
