@@ -1,13 +1,8 @@
 require 'spec_helper_acceptance'
 
-hiera_fixture_data_static = hash_from_fixture_yaml_file('acceptance/data/common.yaml')
 hiera_fixture_data_dhcp = hash_from_fixture_yaml_file('acceptance/data/dhcp.yaml')
-
-pp_static_if = <<-PUPPETCODE
-    class { 'foreman_network':
-      * => #{hiera_fixture_data_static}
-    }
-PUPPETCODE
+hiera_fixture_data_static = hash_from_fixture_yaml_file('acceptance/data/common.yaml')
+hiera_fixture_data_NetworkManager = hash_from_fixture_yaml_file('acceptance/data/NetworkManager.yaml')
 
 pp_dhcp_if = <<-PUPPETCODE
     class { 'foreman_network':
@@ -15,13 +10,28 @@ pp_dhcp_if = <<-PUPPETCODE
     }
 PUPPETCODE
 
+pp_static_if = <<-PUPPETCODE
+    class { 'foreman_network':
+      * => #{hiera_fixture_data_static}
+    }
+PUPPETCODE
+
+pp_static_NetworkManager = <<-PUPPETCODE
+    class { 'foreman_network':
+      * => #{hiera_fixture_data_NetworkManager}
+    }
+PUPPETCODE
+
+
+
 # Set Env Variables
-#ENV['RSPEC_DEBUG'] = 'true'
+ENV['RSPEC_DEBUG'] = 'true'
 ENV['LANG'] = 'C'
 ENV['LC_ALL'] = 'C'
 
 describe 'Execute Class' do
   context 'applies with dhcp interface configuration' do
+    LitmusHelper.instance.run_shell('systemctl stop NetworkManager')
     it { apply_manifest(pp_dhcp_if) }
   end
 
@@ -40,6 +50,7 @@ describe 'Execute Class' do
   end
 
   context 'applies with static interface config' do
+    LitmusHelper.instance.run_shell('systemctl stop NetworkManager')
     it { apply_manifest(pp_static_if) }
   end
 
@@ -75,5 +86,29 @@ describe 'Execute Class' do
         is_expected.to match %r{nameserver 192.168.65.1}
       end
     end
+  end
+
+  context 'applies with static interface config and NetworkManager' do
+    LitmusHelper.instance.run_shell('systemctl start NetworkManager')
+    it { apply_manifest(pp_static_NetworkManager) }
+  end
+
+  context 'check configuration for static interface config with NetworkManager' do
+    describe interface('eth0') do
+      it do
+        is_expected.to be_up
+        is_expected.to have_ipv4_address('172.17.0.4')
+      end
+    end
+    describe routing_table do
+      it do
+        is_expected.to have_entry(
+          destination: 'default',
+          interface: 'eth0',
+          gateway: '172.17.0.1',
+        )
+      end
+    end
+    LitmusHelper.instance.run_shell('systemctl stop NetworkManager')
   end
 end

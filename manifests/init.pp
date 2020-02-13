@@ -38,18 +38,20 @@ class foreman_network (
   Array $searchpath = [ $::domainname ],
 ) {
 
+  include '::network'
+
   # get default route and resolv.conf data from the primary foreman interface
   $primary_interface = $foreman_interfaces.filter |Hash $v| { $v['primary'] == true }[0]
 
   if $primary_interface {
 
     $foreman_default_route = {
-      '0.0.0.0/0' => {
+      'default' => {
         'ensure'    => 'present',
         'gateway'   => $primary_interface['subnet']['gateway'],
         'interface' => $primary_interface['identifier'],
         'netmask'   => '0.0.0.0',
-        'network'   => '0.0.0.0',
+        'network'   => 'default',
       }
     }
 
@@ -95,9 +97,21 @@ class foreman_network (
         'method'    => 'static',
         'netmask'   => $netmask,
       }
+
+      if ($::osfamily == 'RedHat' and $foreman_interface['primary']) {
+        $real_interface_data = $interface_data + {
+          options => {
+            'GATEWAY' => $foreman_interface['subnet']['gateway'],
+            'DEFROUTE' => 'yes'
+          }
+        }
+      } else {
+        $real_interface_data = $interface_data
+      }
+
     }
     elsif $interface_mode == 'DHCP' {
-      $interface_data = {
+      $real_interface_data = {
         'ensure'  => 'present',
         'family'  => 'inet',
         'method'  => 'dhcp',
@@ -105,7 +119,7 @@ class foreman_network (
     }
 
     $result = {
-      $interface_id => $interface_data
+      $interface_id => $real_interface_data
     }
   }
 

@@ -51,7 +51,7 @@ RSpec.configure do |c|
         LitmusHelper.instance.run_shell('puppet module install /tmp/andeman-foreman_network-1.0.0.tar.gz --ignore-dependencies')
       else
         # only install software from remote if we got an ip
-        LitmusHelper.instance.run_shell('yum -y install iproute net-tools ruby dhclient')
+        LitmusHelper.instance.run_shell('yum -y install iproute net-tools ruby dhclient NetworkManager')
         LitmusHelper.instance.run_shell('gem install ipaddress')
       end
       create_remote_file('sysconfig_network', '/etc/sysconfig/network', sysconfig_network)
