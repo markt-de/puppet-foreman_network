@@ -160,6 +160,7 @@ nameserver 4.4.4.4
 ### Overwrite network routes
 
 **IMPORTANT: When the boot mode of the primary interface from foreman is a DHCP, all routes for this interface will be ignored**
+**IMPORTANT: When NetworkManager is enabled no static routes will be set**
 
 #### Add static route and overwrite the default gateway on interface eth0
 

@@ -54,26 +54,26 @@ describe 'foreman_network' do
             'family'  => 'inet',
             'method'  => 'dhcp',
           )
-          is_expected.to contain_network_route('0.0.0.0/0').with(
+          is_expected.to contain_network_route('default').with(
             'ensure'    => 'present',
             'gateway'   => '10.241.60.254',
             'interface' => 'eth0',
             'netmask'   => '0.0.0.0',
-            'network'   => '0.0.0.0',
+            'network'   => 'default',
           )
           is_expected.to contain_class('resolv_conf')
 
           is_expected.to contain_network_config('eth0').that_notifies('Foreman_network::Network_restart[eth0]')
           is_expected.to contain_network_config('eth1').that_notifies('Foreman_network::Network_restart[eth1]')
           is_expected.to contain_network_config('eth2').that_notifies('Foreman_network::Network_restart[eth2]')
-          is_expected.to contain_network_route('0.0.0.0/0').that_notifies('Foreman_network::Network_restart[eth0]')
+          is_expected.to contain_network_route('default').that_notifies('Foreman_network::Network_restart[eth0]')
         }
       end
 
       describe 'test overrides' do
         let(:params) do
           super().merge('route_overrides' => {
-                          '0.0.0.0/0' => {
+                          'default' => {
                             'ensure' => 'present',
                             'gateway' => '10.241.60.253',
                             'interface' => 'eth0',
@@ -95,7 +95,7 @@ describe 'foreman_network' do
         end
 
         it {
-          is_expected.to contain_network_route('0.0.0.0/0').with(
+          is_expected.to contain_network_route('default').with(
             'gateway' => '10.241.60.253',
           )
           is_expected.to contain_network_route('10.1.2.0/24').with(
@@ -106,7 +106,7 @@ describe 'foreman_network' do
             'network'   => '10.1.2.0',
           )
           is_expected.to contain_class('resolv_conf')
-          is_expected.to contain_network_route('0.0.0.0/0').that_notifies('Foreman_network::Network_restart[eth0]')
+          is_expected.to contain_network_route('default').that_notifies('Foreman_network::Network_restart[eth0]')
           is_expected.to contain_network_route('10.1.2.0/24').that_notifies('Foreman_network::Network_restart[eth0]')
         }
       end
