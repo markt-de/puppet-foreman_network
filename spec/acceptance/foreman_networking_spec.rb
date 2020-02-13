@@ -31,7 +31,7 @@ ENV['LC_ALL'] = 'C'
 
 describe 'Execute Class' do
   context 'applies with dhcp interface configuration' do
-    LitmusHelper.instance.run_shell('systemctl stop NetworkManager')
+    run_shell('systemctl stop NetworkManager')
     it { apply_manifest(pp_dhcp_if) }
   end
 
@@ -50,7 +50,7 @@ describe 'Execute Class' do
   end
 
   context 'applies with static interface config' do
-    LitmusHelper.instance.run_shell('systemctl stop NetworkManager')
+    run_shell('systemctl stop NetworkManager')
     it { apply_manifest(pp_static_if) }
   end
 
@@ -89,7 +89,7 @@ describe 'Execute Class' do
   end
 
   context 'applies with static interface config and NetworkManager' do
-    LitmusHelper.instance.run_shell('systemctl start NetworkManager')
+    run_shell('systemctl start NetworkManager')
     it { apply_manifest(pp_static_NetworkManager) }
   end
 
@@ -109,6 +109,6 @@ describe 'Execute Class' do
         )
       end
     end
-    LitmusHelper.instance.run_shell('systemctl stop NetworkManager')
+    run_shell('systemctl stop NetworkManager')
   end
 end
