@@ -46,7 +46,7 @@ class foreman_network (
   if $primary_interface {
 
     $foreman_default_route = {
-      'default' => {
+      '0.0.0.0/0' => {
         'ensure'    => 'present',
         'gateway'   => $primary_interface['subnet']['gateway'],
         'interface' => $primary_interface['identifier'],
