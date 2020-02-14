@@ -22,16 +22,13 @@ pp_static_NetworkManager = <<-PUPPETCODE
     }
 PUPPETCODE
 
-
-
 # Set Env Variables
-ENV['RSPEC_DEBUG'] = 'true'
+#ENV['RSPEC_DEBUG'] = 'true'
 ENV['LANG'] = 'C'
 ENV['LC_ALL'] = 'C'
 
 describe 'Execute Class' do
   context 'applies with dhcp interface configuration' do
-    run_shell('systemctl stop NetworkManager')
     it { apply_manifest(pp_dhcp_if) }
   end
 
@@ -50,11 +47,17 @@ describe 'Execute Class' do
   end
 
   context 'applies with static interface config' do
-    run_shell('systemctl stop NetworkManager')
     it { apply_manifest(pp_static_if) }
   end
 
   context 'check configuration for static interface config' do
+    describe file('/etc/sysconfig/network-scripts/ifcfg-eth0') do
+      its(:content) do
+        is_expected.not_to match %r{GATEWAY=}
+        is_expected.not_to match %r{DEFROUTE=yes}
+      end
+    end
+
     describe interface('eth0') do
       it do
         is_expected.to be_up
@@ -88,8 +91,7 @@ describe 'Execute Class' do
     end
   end
 
-  context 'applies with static interface config and NetworkManager' do
-    run_shell('systemctl start NetworkManager')
+  context 'applies with static interface config and NetworkManager', :NetworkManager => true do
     it { apply_manifest(pp_static_NetworkManager) }
   end
 
@@ -109,6 +111,11 @@ describe 'Execute Class' do
         )
       end
     end
-    run_shell('systemctl stop NetworkManager')
+  end
+  describe file('/etc/sysconfig/network-scripts/ifcfg-eth0') do
+    its(:content) do
+      is_expected.to match %r{GATEWAY=172.17.0.1}
+      is_expected.to match %r{DEFROUTE=yes}
+    end
   end
 end

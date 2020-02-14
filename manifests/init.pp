@@ -46,7 +46,7 @@ class foreman_network (
   if $primary_interface {
 
     $foreman_default_route = {
-      '0.0.0.0/0' => {
+      'default' => {
         'ensure'    => 'present',
         'gateway'   => $primary_interface['subnet']['gateway'],
         'interface' => $primary_interface['identifier'],
@@ -98,7 +98,7 @@ class foreman_network (
         'netmask'   => $netmask,
       }
 
-      if ($::osfamily == 'RedHat' and $foreman_interface['primary']) {
+      if ($::osfamily == 'RedHat' and $foreman_interface['primary'] and $facts['networkmanager'] == 'active') {
         $real_interface_data = $interface_data + {
           options => {
             'GATEWAY' => $foreman_interface['subnet']['gateway'],
