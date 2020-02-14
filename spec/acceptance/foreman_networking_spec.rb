@@ -83,7 +83,7 @@ describe 'Execute Class' do
     describe file('/etc/resolv.conf.test_static') do
       it { is_expected.to be_readable.by_user('root') }
       its(:content) do
-        is_expected.to match %r{search dmz.test.de}
+        is_expected.to match %r{search dmz.foreman.de dmz.additional1.de dmz.additional2.de}
         is_expected.to match %r{nameserver 10.241.40.11}
         is_expected.to match %r{nameserver 10.241.40.12}
         is_expected.to match %r{nameserver 192.168.65.1}
@@ -116,6 +116,11 @@ describe 'Execute Class' do
     its(:content) do
       is_expected.to match %r{GATEWAY=172.17.0.1}
       is_expected.to match %r{DEFROUTE=yes}
+    end
+  end
+  describe file('/etc/resolv.conf.test_static') do
+    its(:content) do
+      is_expected.to match %r{search dmz.foreman.de}
     end
   end
 end

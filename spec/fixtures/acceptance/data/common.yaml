@@ -45,8 +45,11 @@ foreman_interfaces:
     type: Interface
 nameservers:
   - 192.168.65.1
+foreman_searchpath:
+  - dmz.foreman.de
 searchpath:
-  - dmz.test.de
+  - dmz.additional1.de
+  - dmz.additional2.de
 
 resolv_conf_path: /etc/resolv.conf.test_static
 route_overrides:

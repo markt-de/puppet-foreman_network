@@ -4,8 +4,14 @@
 #
 # @param foreman_interfaces
 #   ENC node parameter with key foreman_interfaces injected by foreman
+# @param foreman_searchpath
+#   ENC node parameter with key domainname injected by foreman
+# @param searchpath_merge
+#   if true merges the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
 # @param searchpath
-#   Search list for host-name lookup in resolv.conf. Use ENC node parameter domainname from foreman as default
+#   Search list in resolv.conf. if searchpath_merge is true the array will me merged with foreman_searchpath
+# @param nameservers_merge
+#   if true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
 # @param nameservers
 #   List of nameservers which will be either exclusive used or merged. Depends on nameservers_merge
 # @param nameservers_merge
@@ -34,8 +40,10 @@ class foreman_network (
   Boolean $manage_if_from_facts_only,
   Stdlib::Compat::Absolute_path $resolv_conf_path,
   Boolean $debug,
+  Boolean $searchpath_merge,
+  Array $searchpath,
   Array $foreman_interfaces = $::foreman_interfaces,
-  Array $searchpath = [ $::domainname ],
+  Array $foreman_searchpath = [ $::domainname ],
 ) {
 
   include '::network'
@@ -74,9 +82,15 @@ class foreman_network (
       $real_nameservers = $nameservers
     }
 
+    if $searchpath_merge {
+      $real_searchpath = unique($foreman_searchpath + $searchpath)
+    }
+    else {
+      $real_searchpath = $foreman_searchpath
+    }
     $network_resolv_conf = {
       'nameservers' => $real_nameservers,
-      'searchpath' => $searchpath
+      'searchpath' => $real_searchpath
     }
   }
 
