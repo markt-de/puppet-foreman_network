@@ -23,7 +23,7 @@ pp_static_NetworkManager = <<-PUPPETCODE
 PUPPETCODE
 
 # Set Env Variables
-#ENV['RSPEC_DEBUG'] = 'true'
+ENV['RSPEC_DEBUG'] = 'true'
 ENV['LANG'] = 'C'
 ENV['LC_ALL'] = 'C'
 

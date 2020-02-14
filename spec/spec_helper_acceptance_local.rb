@@ -56,8 +56,8 @@ RSpec.configure do |c|
       end
       create_remote_file('sysconfig_network', '/etc/sysconfig/network', sysconfig_network)
       create_remote_file('dhclient_eth0_conf', '/etc/dhcp/dhclient-eth0.conf', dhclient_eth0_conf)
-      LitmusHelper.instance.run_shell('rm /etc/sysconfig/network-scripts/ifcfg-eth0')
-      LitmusHelper.instance.run_shell('rm /etc/sysconfig/network-scripts/route-eth0')
+      LitmusHelper.instance.run_shell('rm -f /etc/sysconfig/network-scripts/ifcfg-eth0')
+      LitmusHelper.instance.run_shell('rm -f /etc/sysconfig/network-scripts/route-eth0')
     end
   end
   c.before(:each, :NetworkManager => true) do
