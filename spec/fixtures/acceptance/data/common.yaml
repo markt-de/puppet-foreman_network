@@ -43,6 +43,24 @@ foreman_interfaces:
     tag:
     attached_to:
     type: Interface
+  - ip: 172.17.0.30
+    ip6: ''
+    mac:
+    name: ''
+    attrs:
+      netmask: 255.255.255.255
+      network: 172.17.0.30
+    virtual: false
+    link: true
+    identifier: eth0:0
+    managed: false
+    primary: false
+    provision: false
+    subnet:
+    subnet6:
+    tag:
+    attached_to:
+    type: Interface
 nameservers:
   - 192.168.65.1
 foreman_searchpath:
