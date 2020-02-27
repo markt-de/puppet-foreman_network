@@ -65,6 +65,18 @@ describe 'Execute Class' do
       end
     end
 
+    describe file('/etc/sysconfig/network-scripts/ifcfg-eth0:0') do
+      its(:content) do
+        is_expected.to match %r{DEVICE=eth0:0}
+      end
+    end
+
+    describe interface('eth0:0') do
+      it do
+        is_expected.to have_ipv4_address('172.17.0.30/32')
+      end
+    end
+
     describe routing_table do
       it do
         is_expected.to have_entry(
@@ -112,6 +124,7 @@ describe 'Execute Class' do
       end
     end
   end
+
   describe file('/etc/sysconfig/network-scripts/ifcfg-eth0') do
     its(:content) do
       is_expected.to match %r{GATEWAY=172.17.0.1}

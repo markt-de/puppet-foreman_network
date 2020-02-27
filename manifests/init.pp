@@ -100,8 +100,15 @@ class foreman_network (
 
     # IPv4 only
     $ip = $foreman_interface['ip']
-    $netmask = $foreman_interface['subnet']['mask']
-    $interface_mode = $foreman_interface['subnet']['boot_mode']
+
+    # check if it´s an ip alias
+    if $interface_id =~ /^\w+\d:\d/ {
+      $netmask = '255.255.255.255'
+      $interface_mode = 'Static'
+    } else {
+      $netmask = $foreman_interface['subnet']['mask']
+      $interface_mode = $foreman_interface['subnet']['boot_mode']
+    }
 
     if $interface_mode == 'Static' {
       $interface_data = {
