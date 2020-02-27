@@ -68,6 +68,8 @@ class { 'foreman_network':
   manage_if_from_facts_only       => true,
   resolv_conf_path                => '/etc/resolv.conf',
   debug                           => false,
+  searchpath_merge                => true,
+  searchpath                      => [],
 }
 ```
 
@@ -82,7 +84,9 @@ foreman_network:
   mange_network_interface_restart: true
   manage_if_from_facts_only: true
   resolv_conf_path: /etc/resolv.conf
-  debug: false   
+  debug: false
+  searchpath_merge: true
+  searchpath: []
 ```
 
 ### Configure nameservers 

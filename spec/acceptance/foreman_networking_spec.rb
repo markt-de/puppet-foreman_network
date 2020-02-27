@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 hiera_fixture_data_dhcp = hash_from_fixture_yaml_file('acceptance/data/dhcp.yaml')
 hiera_fixture_data_static = hash_from_fixture_yaml_file('acceptance/data/common.yaml')
-hiera_fixture_data_NetworkManager = hash_from_fixture_yaml_file('acceptance/data/NetworkManager.yaml')
+hiera_fixture_data_network_manager = hash_from_fixture_yaml_file('acceptance/data/NetworkManager.yaml')
 
 pp_dhcp_if = <<-PUPPETCODE
     class { 'foreman_network':
@@ -16,9 +16,9 @@ pp_static_if = <<-PUPPETCODE
     }
 PUPPETCODE
 
-pp_static_NetworkManager = <<-PUPPETCODE
+pp_static_network_manager = <<-PUPPETCODE
     class { 'foreman_network':
-      * => #{hiera_fixture_data_NetworkManager}
+      * => #{hiera_fixture_data_network_manager}
     }
 PUPPETCODE
 
@@ -91,8 +91,8 @@ describe 'Execute Class' do
     end
   end
 
-  context 'applies with static interface config and NetworkManager', :NetworkManager => true do
-    it { apply_manifest(pp_static_NetworkManager) }
+  context 'applies with static interface config and NetworkManager', NetworkManager: true do
+    it { apply_manifest(pp_static_network_manager) }
   end
 
   context 'check configuration for static interface config with NetworkManager' do

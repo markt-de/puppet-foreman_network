@@ -29,13 +29,31 @@ ENC node parameter with key foreman_interfaces injected by foreman
 
 Default value: $::foreman_interfaces
 
+##### `foreman_searchpath`
+
+Data type: `Array`
+
+ENC node parameter with key domainname injected by foreman
+
+Default value: [ $::domainname ]
+
+##### `searchpath_merge`
+
+Data type: `Boolean`
+
+If true then merge the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
+
 ##### `searchpath`
 
 Data type: `Array`
 
-Search list for host-name lookup in resolv.conf. Use ENC node parameter domainname from foreman as default
+Search list in resolv.conf. if searchpath_merge is true the array will me merged with foreman_searchpath
 
-Default value: [ $::domainname ]
+##### `nameservers_merge`
+
+Data type: `Boolean`
+
+If true then merge the entries given in the nameservers variable with the entries from foreman
 
 ##### `nameservers`
 
@@ -45,9 +63,7 @@ List of nameservers which will be either exclusive used or merged. Depends on na
 
 ##### `nameservers_merge`
 
-Data type: `Boolean`
-
-if true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
+If true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
 
 ##### `manage_resolv_conf`
 

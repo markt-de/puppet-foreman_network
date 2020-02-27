@@ -7,15 +7,15 @@
 # @param foreman_searchpath
 #   ENC node parameter with key domainname injected by foreman
 # @param searchpath_merge
-#   if true merges the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
+#   If true then merge the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
 # @param searchpath
 #   Search list in resolv.conf. if searchpath_merge is true the array will me merged with foreman_searchpath
 # @param nameservers_merge
-#   if true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
+#   If true then merge the entries given in the nameservers variable with the entries from foreman
 # @param nameservers
 #   List of nameservers which will be either exclusive used or merged. Depends on nameservers_merge
 # @param nameservers_merge
-#   if true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
+#   If true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
 # @param manage_resolv_conf
 #   Specify wether to manage resolve.conf or not.
 #   IMPORTANT: If DHCP is enabled on the primary interface resolv.conf will always be unmanged.

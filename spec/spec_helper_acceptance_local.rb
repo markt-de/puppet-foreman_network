@@ -60,12 +60,12 @@ RSpec.configure do |c|
       LitmusHelper.instance.run_shell('rm -f /etc/sysconfig/network-scripts/route-eth0')
     end
   end
-  c.before(:each, :NetworkManager => true) do
-    puts "Starting Network Manager"
+  c.before(:each, NetworkManager: true) do
+    puts 'Starting Network Manager'
     LitmusHelper.instance.run_shell('systemctl start NetworkManager')
   end
-  c.after(:each, :NetworkManager => true) do
-    puts "Stopping Network Manager"
+  c.after(:each, NetworkManager: true) do
+    puts 'Stopping Network Manager'
     LitmusHelper.instance.run_shell('systemctl stop NetworkManager')
   end
 end
