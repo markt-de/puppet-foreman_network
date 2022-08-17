@@ -261,16 +261,13 @@ Remove the test environment:
 pdk test unit
 ```
 
-### Updating documentation
 
-Update REFERENCE.md
+### Release Process
 ```
-puppet strings generate --format markdown
+scripts/make-release
+
+git push
 ```
-
-Generate TOC
-
-https://ecotrust-canada.github.io/markdown-toc/
 
 ## Release Notes
 
