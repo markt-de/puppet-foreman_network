@@ -14,7 +14,7 @@ define foreman_network::network_restart (
   if $mange_network_interface_restart {
     exec { "network_restart_${interface}":
       command     => "ifdown ${interface} --force ; ifup ${interface}",
-      path        => '/sbin',
+      path        => '/bin:/usr/bin:/sbin:/usr/sbin',
       refreshonly => true,
     }
   }
