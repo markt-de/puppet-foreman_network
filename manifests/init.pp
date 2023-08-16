@@ -1,35 +1,42 @@
-# == Class: foreman_network
-#
 # @summary Configure network interfaces, routes and resolv.conf from foreman ENC node parametes
+#
+# @param debug
+#   Turn on debug mode
 #
 # @param foreman_interfaces
 #   ENC node parameter with key foreman_interfaces injected by foreman
+#
 # @param foreman_searchpath
 #   ENC node parameter with key domainname injected by foreman
-# @param searchpath_merge
-#   If true then merge the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
-# @param searchpath
-#   Search list in resolv.conf. if searchpath_merge is true the array will me merged with foreman_searchpath
-# @param nameservers_merge
-#   If true then merge the entries given in the nameservers variable with the entries from foreman
-# @param nameservers
-#   List of nameservers which will be either exclusive used or merged. Depends on nameservers_merge
-# @param nameservers_merge
-#   If true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
+#
+# @param mange_network_interface_restart
+#   True means the network interface will be configured (if down & up) immediately on change
+#
+# @param manage_if_from_facts_only
+#   If true then only interfaces will be managed that exists in $facts['networking']['interfaces']
+#
 # @param manage_resolv_conf
 #   Specify wether to manage resolve.conf or not.
 #   IMPORTANT: If DHCP is enabled on the primary interface resolv.conf will always be unmanged.
+#
+# @param nameservers
+#   List of nameservers which will be either exclusive used or merged. Depends on nameservers_merge
+#
+# @param nameservers_merge
+#   If true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
+#
+# @param resolv_conf_path
+#   The path of the resolv.conf. For docker accaptance test this could be modified
+#
 # @param route_overrides
 #   Overrides the default route provided by foreman and could also add additional static network routes.
 #   IMPORTANT: If DHCP enabled is enabled on the primary interface. All routes on the primary interface will be ignored.
-# @param mange_network_interface_restart
-#   True means the network interface will be configured (if down & up) immediately on change
-# @param manage_if_from_facts_only
-#   If true then only interfaces will be managed that exists in $facts['networking']['interfaces']
-# @param resolv_conf_path
-#   The path of the resolv.conf. For docker accaptance test this could be modified
-# @param debug
-#   Turn on debug mode
+#
+# @param searchpath
+#   Search list in resolv.conf. if searchpath_merge is true the array will me merged with foreman_searchpath
+#
+# @param searchpath_merge
+#   If true then merge the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
 #
 class foreman_network (
   Array $nameservers,
@@ -43,16 +50,14 @@ class foreman_network (
   Boolean $searchpath_merge,
   Array $searchpath,
   Array $foreman_interfaces = $::foreman_interfaces,
-  Array $foreman_searchpath = [ $::domainname ],
+  Array $foreman_searchpath = [$::domainname],
 ) {
-
-  include '::network'
+  include 'network'
 
   # get default route and resolv.conf data from the primary foreman interface
   $primary_interface = $foreman_interfaces.filter |Hash $v| { $v['primary'] == true }[0]
 
   if $primary_interface {
-
     $foreman_default_route = {
       'default' => {
         'ensure'    => 'present',
@@ -60,7 +65,7 @@ class foreman_network (
         'interface' => $primary_interface['identifier'],
         'netmask'   => '0.0.0.0',
         'network'   => 'default',
-      }
+      },
     }
 
     if $primary_interface['subnet']['boot_mode'] == 'DHCP' {
@@ -72,7 +77,7 @@ class foreman_network (
 
     $foreman_nameserver = [
       $primary_interface['subnet']['dns_primary'],
-      $primary_interface['subnet']['dns_secondary']
+      $primary_interface['subnet']['dns_secondary'],
     ]
 
     if $nameservers_merge {
@@ -90,7 +95,7 @@ class foreman_network (
     }
     $network_resolv_conf = {
       'nameservers' => $real_nameservers,
-      'searchpath' => $real_searchpath
+      'searchpath' => $real_searchpath,
     }
   }
 
@@ -119,17 +124,16 @@ class foreman_network (
         'netmask'   => $netmask,
       }
 
-      if ($::osfamily == 'RedHat' and $foreman_interface['primary'] and $facts['networkmanager'] == 'active') {
+      if ($facts['os']['family'] == 'RedHat' and $foreman_interface['primary'] and $facts['networkmanager'] == 'active') {
         $real_interface_data = $interface_data + {
           options => {
             'GATEWAY' => $foreman_interface['subnet']['gateway'],
-            'DEFROUTE' => 'yes'
+            'DEFROUTE' => 'yes',
           }
         }
       } else {
         $real_interface_data = $interface_data
       }
-
     }
     elsif $interface_mode == 'DHCP' {
       $real_interface_data = {
@@ -140,18 +144,15 @@ class foreman_network (
     }
 
     $result = {
-      $interface_id => $real_interface_data
+      $interface_id => $real_interface_data,
     }
   }
 
   # manage resolv.conf only on primary non dhcp interface
-  if (
-    $manage_resolv_conf
-      and $primary_interface['subnet']['boot_mode'] != 'DHCP'
-  ) {
-    class { '::resolv_conf':
-        *           => $network_resolv_conf,
-        config_file => $resolv_conf_path,
+  if ($manage_resolv_conf and $primary_interface['subnet']['boot_mode'] != 'DHCP') {
+    class { 'resolv_conf':
+      *           => $network_resolv_conf,
+      config_file => $resolv_conf_path,
     }
   }
 
@@ -159,8 +160,8 @@ class foreman_network (
   $network_config_data.each |Hash $resource| {
     $resource.map |$interface, $config| {
       # instance network interface restart resources
-      foreman_network::network_restart{ $interface:
-        interface => $interface
+      foreman_network::network_restart { $interface:
+        interface => $interface,
       }
 
       if (
@@ -169,42 +170,39 @@ class foreman_network (
       ) {
         network_config { $interface:
           *      => $config,
-          notify => Foreman_network::Network_restart[$interface]
+          notify => Foreman_network::Network_restart[$interface],
         }
       } else {
-        warning("The interface: ${interface} does not exist in facts['networking']['interfaces'] or is a dhcp interface")
+        warning("The interface ${interface} does not exist in facts['networking']['interfaces'] or is a dhcp interface")
       }
     }
   }
 
   # manage routes
   $network_route_data.each |String $route, Hash $config| {
-    if (
-      $manage_if_from_facts_only == true and has_key($facts['networking']['interfaces'], $config['interface'])
-        or $manage_if_from_facts_only == false
+    if ($manage_if_from_facts_only == true and has_key($facts['networking']['interfaces'], $config['interface'])
+      or $manage_if_from_facts_only == false
     ) {
-      if (
-        $primary_interface['subnet']['boot_mode'] == 'DHCP'
-          and $config['interface'] == $primary_interface['identifier']
+      if ($primary_interface['subnet']['boot_mode'] == 'DHCP'
+        and $config['interface'] == $primary_interface['identifier']
       ) {
-        warning("Ignoring the route: ${route} because ${config['interface']} is primary and has dhcp enabled")
+        warning("Ignoring the route ${route} because ${config['interface']} is primary and has dhcp enabled")
       } else {
         network_route { $route:
           *      => $config,
-          notify => Foreman_network::Network_restart[$config['interface']]
+          notify => Foreman_network::Network_restart[$config['interface']],
         }
       }
     } else {
-      warning("The interface: ${config['interface']} for route ${route} does not exist in facts['networking']['interfaces'].")
+      warning("The interface ${config['interface']} for route ${route} does not exist in facts['networking']['interfaces'].")
     }
   }
 
-  if($debug) {
-    notify {"ENC data: foreman_interfaces ${foreman_interfaces} ": withpath => true, }
-    notify {"ENC data: searchpath ${searchpath} ": withpath => true, }
-    notify {"network_config_data ${network_config_data} ": withpath => true, }
-    notify {"network_route_data ${network_route_data} ": withpath => true, }
-    notify {"network_resolv_conf ${network_resolv_conf} ": withpath => true, }
+  if ($debug) {
+    notify { "ENC data: foreman_interfaces ${foreman_interfaces} ": withpath => true }
+    notify { "ENC data: searchpath ${searchpath} ": withpath => true }
+    notify { "network_config_data ${network_config_data} ": withpath => true }
+    notify { "network_route_data ${network_route_data} ": withpath => true }
+    notify { "network_resolv_conf ${network_resolv_conf} ": withpath => true }
   }
-
 }

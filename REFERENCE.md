@@ -10,33 +10,38 @@
 
 ### Defined types
 
-* [`foreman_network::network_restart`](#foreman_networknetwork_restart): Restart a network interface
+* [`foreman_network::network_restart`](#foreman_network--network_restart): Restart a network interface
 
 ## Classes
 
 ### <a name="foreman_network"></a>`foreman_network`
 
-== Class: foreman_network
+Configure network interfaces, routes and resolv.conf from foreman ENC node parametes
 
 #### Parameters
 
 The following parameters are available in the `foreman_network` class:
 
-* [`foreman_interfaces`](#foreman_interfaces)
-* [`foreman_searchpath`](#foreman_searchpath)
-* [`searchpath_merge`](#searchpath_merge)
-* [`searchpath`](#searchpath)
-* [`nameservers_merge`](#nameservers_merge)
-* [`nameservers`](#nameservers)
-* [`nameservers_merge`](#nameservers_merge)
-* [`manage_resolv_conf`](#manage_resolv_conf)
-* [`route_overrides`](#route_overrides)
-* [`mange_network_interface_restart`](#mange_network_interface_restart)
-* [`manage_if_from_facts_only`](#manage_if_from_facts_only)
-* [`resolv_conf_path`](#resolv_conf_path)
-* [`debug`](#debug)
+* [`debug`](#-foreman_network--debug)
+* [`foreman_interfaces`](#-foreman_network--foreman_interfaces)
+* [`foreman_searchpath`](#-foreman_network--foreman_searchpath)
+* [`mange_network_interface_restart`](#-foreman_network--mange_network_interface_restart)
+* [`manage_if_from_facts_only`](#-foreman_network--manage_if_from_facts_only)
+* [`manage_resolv_conf`](#-foreman_network--manage_resolv_conf)
+* [`nameservers`](#-foreman_network--nameservers)
+* [`nameservers_merge`](#-foreman_network--nameservers_merge)
+* [`resolv_conf_path`](#-foreman_network--resolv_conf_path)
+* [`route_overrides`](#-foreman_network--route_overrides)
+* [`searchpath`](#-foreman_network--searchpath)
+* [`searchpath_merge`](#-foreman_network--searchpath_merge)
 
-##### <a name="foreman_interfaces"></a>`foreman_interfaces`
+##### <a name="-foreman_network--debug"></a>`debug`
+
+Data type: `Boolean`
+
+Turn on debug mode
+
+##### <a name="-foreman_network--foreman_interfaces"></a>`foreman_interfaces`
 
 Data type: `Array`
 
@@ -44,83 +49,73 @@ ENC node parameter with key foreman_interfaces injected by foreman
 
 Default value: `$::foreman_interfaces`
 
-##### <a name="foreman_searchpath"></a>`foreman_searchpath`
+##### <a name="-foreman_network--foreman_searchpath"></a>`foreman_searchpath`
 
 Data type: `Array`
 
 ENC node parameter with key domainname injected by foreman
 
-Default value: `[ $::domainname ]`
+Default value: `[$::domainname]`
 
-##### <a name="searchpath_merge"></a>`searchpath_merge`
-
-Data type: `Boolean`
-
-If true then merge the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
-
-##### <a name="searchpath"></a>`searchpath`
-
-Data type: `Array`
-
-Search list in resolv.conf. if searchpath_merge is true the array will me merged with foreman_searchpath
-
-##### <a name="nameservers_merge"></a>`nameservers_merge`
+##### <a name="-foreman_network--mange_network_interface_restart"></a>`mange_network_interface_restart`
 
 Data type: `Boolean`
 
-If true then merge the entries given in the nameservers variable with the entries from foreman
+True means the network interface will be configured (if down & up) immediately on change
 
-##### <a name="nameservers"></a>`nameservers`
+##### <a name="-foreman_network--manage_if_from_facts_only"></a>`manage_if_from_facts_only`
 
-Data type: `Array`
+Data type: `Boolean`
 
-List of nameservers which will be either exclusive used or merged. Depends on nameservers_merge
+If true then only interfaces will be managed that exists in $facts['networking']['interfaces']
 
-##### <a name="nameservers_merge"></a>`nameservers_merge`
-
-If true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
-
-##### <a name="manage_resolv_conf"></a>`manage_resolv_conf`
+##### <a name="-foreman_network--manage_resolv_conf"></a>`manage_resolv_conf`
 
 Data type: `Boolean`
 
 Specify wether to manage resolve.conf or not.
 IMPORTANT: If DHCP is enabled on the primary interface resolv.conf will always be unmanged.
 
-##### <a name="route_overrides"></a>`route_overrides`
+##### <a name="-foreman_network--nameservers"></a>`nameservers`
+
+Data type: `Array`
+
+List of nameservers which will be either exclusive used or merged. Depends on nameservers_merge
+
+##### <a name="-foreman_network--nameservers_merge"></a>`nameservers_merge`
+
+Data type: `Boolean`
+
+If true merges the entries the foreman dns servers with nameservers. if false then only use nameserver
+
+##### <a name="-foreman_network--resolv_conf_path"></a>`resolv_conf_path`
+
+Data type: `Stdlib::Compat::Absolute_path`
+
+The path of the resolv.conf. For docker accaptance test this could be modified
+
+##### <a name="-foreman_network--route_overrides"></a>`route_overrides`
 
 Data type: `Hash`
 
 Overrides the default route provided by foreman and could also add additional static network routes.
 IMPORTANT: If DHCP enabled is enabled on the primary interface. All routes on the primary interface will be ignored.
 
-##### <a name="mange_network_interface_restart"></a>`mange_network_interface_restart`
+##### <a name="-foreman_network--searchpath"></a>`searchpath`
+
+Data type: `Array`
+
+Search list in resolv.conf. if searchpath_merge is true the array will me merged with foreman_searchpath
+
+##### <a name="-foreman_network--searchpath_merge"></a>`searchpath_merge`
 
 Data type: `Boolean`
 
-True means the network interface will be configured (if down & up) immediately on change
-
-##### <a name="manage_if_from_facts_only"></a>`manage_if_from_facts_only`
-
-Data type: `Boolean`
-
-If true then only interfaces will be managed that exists in $facts['networking']['interfaces']
-
-##### <a name="resolv_conf_path"></a>`resolv_conf_path`
-
-Data type: `Stdlib::Compat::Absolute_path`
-
-The path of the resolv.conf. For docker accaptance test this could be modified
-
-##### <a name="debug"></a>`debug`
-
-Data type: `Boolean`
-
-Turn on debug mode
+If true then merge the entries the foreman_searchpath with searchpath. if false then only use searchpath from foreman
 
 ## Defined types
 
-### <a name="foreman_networknetwork_restart"></a>`foreman_network::network_restart`
+### <a name="foreman_network--network_restart"></a>`foreman_network::network_restart`
 
 Apply configuration changes for a network interface
 
@@ -128,16 +123,16 @@ Apply configuration changes for a network interface
 
 The following parameters are available in the `foreman_network::network_restart` defined type:
 
-* [`interface`](#interface)
-* [`mange_network_interface_restart`](#mange_network_interface_restart)
+* [`interface`](#-foreman_network--network_restart--interface)
+* [`mange_network_interface_restart`](#-foreman_network--network_restart--mange_network_interface_restart)
 
-##### <a name="interface"></a>`interface`
+##### <a name="-foreman_network--network_restart--interface"></a>`interface`
 
 Data type: `String`
 
 The network interface identifier eg. eth0
 
-##### <a name="mange_network_interface_restart"></a>`mange_network_interface_restart`
+##### <a name="-foreman_network--network_restart--mange_network_interface_restart"></a>`mange_network_interface_restart`
 
 Data type: `Boolean`
 
