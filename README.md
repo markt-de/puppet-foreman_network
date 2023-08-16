@@ -3,8 +3,6 @@
 #### Table of Contents
 
 - [Overview](#overview)
-- [Requirements](#requirements)
-  * [Beginning with foreman_network](#beginning-with-foreman_network)
 - [Usage](#usage)
   * [Install and enable foreman_network](#install-and-enable-foreman_network)
   * [Declare foreman_network](#declare-foreman_network)
@@ -33,17 +31,8 @@ More information about foreman: https://theforeman.org/
 
 Information about Puppet ENC (external node classifier): https://puppet.com/docs/puppet/latest/nodes_external.html
 
-## Requirements
-
-* Puppet >= 4.10.0 < 7.0.0
-* [puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib)
-* [puppet/network](https://github.com/voxpupuli/puppet-network)
-* [saz/resolv_conf](https://github.com/saz/puppet-resolv_conf)
-
-### Beginning with foreman_network
-All parameters for the module are contained within the main class, so for any function of the module, set the options you want. All configuration parameters can be assigned hiera. The default values are also lookuped up by hiera. See the common usages below for examples.
-
 ## Usage
+All parameters for the module are contained within the main class, so for any function of the module, set the options you want. All configuration parameters can be assigned hiera. The default values are also lookuped up by hiera. See the common usages below for examples.
 
 ### Install and enable foreman_network
 ```
@@ -268,7 +257,3 @@ scripts/make-release
 
 git push
 ```
-
-## Release Notes
-
-See [CHANGELOG.md](CHANGELOG.md)
