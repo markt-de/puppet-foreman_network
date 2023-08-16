@@ -45,7 +45,7 @@ class foreman_network (
   Hash $route_overrides,
   Boolean $mange_network_interface_restart,
   Boolean $manage_if_from_facts_only,
-  Stdlib::Compat::Absolute_path $resolv_conf_path,
+  Stdlib::Absolutepath $resolv_conf_path,
   Boolean $debug,
   Boolean $searchpath_merge,
   Array $searchpath,
@@ -165,7 +165,7 @@ class foreman_network (
       }
 
       if (
-        $manage_if_from_facts_only == true and has_key($facts['networking']['interfaces'], $interface)
+        $manage_if_from_facts_only == true and ($interface in $facts['networking']['interfaces'])
         or $manage_if_from_facts_only == false
       ) {
         network_config { $interface:
@@ -180,7 +180,7 @@ class foreman_network (
 
   # manage routes
   $network_route_data.each |String $route, Hash $config| {
-    if ($manage_if_from_facts_only == true and has_key($facts['networking']['interfaces'], $config['interface'])
+    if ($manage_if_from_facts_only == true and ($config['interface'] in $facts['networking']['interfaces'])
       or $manage_if_from_facts_only == false
     ) {
       if ($primary_interface['subnet']['boot_mode'] == 'DHCP'
