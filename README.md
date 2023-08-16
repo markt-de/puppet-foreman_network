@@ -1,4 +1,4 @@
-# foreman_network
+# puppet-foreman_network
 
 #### Table of Contents
 
