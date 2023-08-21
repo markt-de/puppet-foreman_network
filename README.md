@@ -49,16 +49,16 @@ class { 'foreman_network': }
 Declare the class with default values:
 ```
 class { 'foreman_network':
-  nameservers                     => [],
-  nameservers_merge               => true,
-  manage_resolv_conf              => true,
-  route_overrides                 => {},
-  mange_network_interface_restart => true,
-  manage_if_from_facts_only       => true,
-  resolv_conf_path                => '/etc/resolv.conf',
-  debug                           => false,
-  searchpath_merge                => true,
-  searchpath                      => [],
+  nameservers                      => [],
+  nameservers_merge                => true,
+  manage_resolv_conf               => true,
+  route_overrides                  => {},
+  manage_network_interface_restart => true,
+  manage_if_from_facts_only        => true,
+  resolv_conf_path                 => '/etc/resolv.conf',
+  debug                            => false,
+  searchpath_merge                 => true,
+  searchpath                       => [],
 }
 ```
 
@@ -70,7 +70,7 @@ foreman_network:
   nameservers_merge: true
   manage_resolv_conf: true
   route_overrides: {}
-  mange_network_interface_restart: true
+  manage_network_interface_restart: true
   manage_if_from_facts_only: true
   resolv_conf_path: /etc/resolv.conf
   debug: false

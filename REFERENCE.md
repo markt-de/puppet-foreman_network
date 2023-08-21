@@ -25,7 +25,7 @@ The following parameters are available in the `foreman_network` class:
 * [`debug`](#-foreman_network--debug)
 * [`foreman_interfaces`](#-foreman_network--foreman_interfaces)
 * [`foreman_searchpath`](#-foreman_network--foreman_searchpath)
-* [`mange_network_interface_restart`](#-foreman_network--mange_network_interface_restart)
+* [`manage_network_interface_restart`](#-foreman_network--manage_network_interface_restart)
 * [`manage_if_from_facts_only`](#-foreman_network--manage_if_from_facts_only)
 * [`manage_resolv_conf`](#-foreman_network--manage_resolv_conf)
 * [`nameservers`](#-foreman_network--nameservers)
@@ -57,7 +57,7 @@ ENC node parameter with key domainname injected by foreman
 
 Default value: `[$::domainname]`
 
-##### <a name="-foreman_network--mange_network_interface_restart"></a>`mange_network_interface_restart`
+##### <a name="-foreman_network--manage_network_interface_restart"></a>`manage_network_interface_restart`
 
 Data type: `Boolean`
 
@@ -90,7 +90,7 @@ If true merges the entries the foreman dns servers with nameservers. if false th
 
 ##### <a name="-foreman_network--resolv_conf_path"></a>`resolv_conf_path`
 
-Data type: `Stdlib::Compat::Absolute_path`
+Data type: `Stdlib::Absolutepath`
 
 The path of the resolv.conf. For docker accaptance test this could be modified
 
@@ -124,7 +124,7 @@ Apply configuration changes for a network interface
 The following parameters are available in the `foreman_network::network_restart` defined type:
 
 * [`interface`](#-foreman_network--network_restart--interface)
-* [`mange_network_interface_restart`](#-foreman_network--network_restart--mange_network_interface_restart)
+* [`manage_network_interface_restart`](#-foreman_network--network_restart--manage_network_interface_restart)
 
 ##### <a name="-foreman_network--network_restart--interface"></a>`interface`
 
@@ -132,11 +132,11 @@ Data type: `String`
 
 The network interface identifier eg. eth0
 
-##### <a name="-foreman_network--network_restart--mange_network_interface_restart"></a>`mange_network_interface_restart`
+##### <a name="-foreman_network--network_restart--manage_network_interface_restart"></a>`manage_network_interface_restart`
 
 Data type: `Boolean`
 
 if true the network interface will be restarted
 
-Default value: `$foreman_network::mange_network_interface_restart`
+Default value: `$foreman_network::manage_network_interface_restart`
 

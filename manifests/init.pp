@@ -9,7 +9,7 @@
 # @param foreman_searchpath
 #   ENC node parameter with key domainname injected by foreman
 #
-# @param mange_network_interface_restart
+# @param manage_network_interface_restart
 #   True means the network interface will be configured (if down & up) immediately on change
 #
 # @param manage_if_from_facts_only
@@ -43,7 +43,7 @@ class foreman_network (
   Boolean $nameservers_merge,
   Boolean $manage_resolv_conf,
   Hash $route_overrides,
-  Boolean $mange_network_interface_restart,
+  Boolean $manage_network_interface_restart,
   Boolean $manage_if_from_facts_only,
   Stdlib::Absolutepath $resolv_conf_path,
   Boolean $debug,
