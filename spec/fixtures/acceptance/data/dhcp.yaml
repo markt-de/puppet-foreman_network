@@ -17,7 +17,7 @@ foreman_interfaces:
       mtu: 1500
       netmask: 255.255.255.0
       netmask6: 'ffff:ffff:ffff:ffff::'
-      network: 10.50.1.0
+      network: 172.17.0.0
       network6: 'fe80::'
     virtual: false
     link: true

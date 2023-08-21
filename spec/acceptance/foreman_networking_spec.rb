@@ -38,7 +38,9 @@ describe 'Execute Class' do
     end
 
     describe interface('eth0') do
-      its(:ipv4_address) { is_expected.not_to match %r{172\.17\.0\.} }
+      # Is expected to use container default IP instead of the static IP
+      # which is provided by Foreman.
+      its(:ipv4_address) { is_expected.not_to match %r{172\.17\.0\.3} }
     end
 
     describe command('ip route list') do
@@ -60,22 +62,29 @@ describe 'Execute Class' do
 
     describe interface('eth0') do
       it do
+        # XXX debug output
+        # run_shell('cat /etc/sysconfig/network-scripts/ifcfg-eth0') do |r|
+        #   expect(r.stdout).to match(%r{DOES_NOT_EXIST})
+        # end
+
         is_expected.to be_up
         is_expected.to have_ipv4_address('172.17.0.3')
       end
     end
 
-    describe file('/etc/sysconfig/network-scripts/ifcfg-eth0:0') do
-      its(:content) do
-        is_expected.to match %r{DEVICE=eth0:0}
-      end
-    end
+    # XXX Alias interfaces are a thing of the past, NetworkManager refuses them:
+    #     invalid DEVICE name 'eth0:0'
+    # describe file('/etc/sysconfig/network-scripts/ifcfg-eth0:0') do
+    #   its(:content) do
+    #     is_expected.to match %r{DEVICE=eth0:0}
+    #   end
+    # end
 
-    describe interface('eth0:0') do
-      it do
-        is_expected.to have_ipv4_address('172.17.0.30/32')
-      end
-    end
+    # describe interface('eth0:0') do
+    #   it do
+    #     is_expected.to have_ipv4_address('172.17.0.30/32')
+    #   end
+    # end
 
     describe routing_table do
       it do

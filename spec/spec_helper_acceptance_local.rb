@@ -47,13 +47,8 @@ RSpec.configure do |c|
 
     # setup redhat systems for acceptance tests
     if os[:family] == 'redhat'
-      if vmipaddr.empty?
-        LitmusHelper.instance.run_shell('puppet module install /tmp/andeman-foreman_network-1.0.0.tar.gz --ignore-dependencies')
-      else
-        # only install software from remote if we got an ip
-        LitmusHelper.instance.run_shell('yum -y install iproute net-tools ruby dhclient NetworkManager')
-        LitmusHelper.instance.run_shell('gem install ipaddress')
-      end
+      LitmusHelper.instance.run_shell('yum -y install dhclient iproute net-tools NetworkManager NetworkManager-initscripts-updown ruby')
+      LitmusHelper.instance.run_shell('gem install ipaddress')
       create_remote_file('sysconfig_network', '/etc/sysconfig/network', sysconfig_network)
       create_remote_file('dhclient_eth0_conf', '/etc/dhcp/dhclient-eth0.conf', dhclient_eth0_conf)
       LitmusHelper.instance.run_shell('rm -f /etc/sysconfig/network-scripts/ifcfg-eth0')
