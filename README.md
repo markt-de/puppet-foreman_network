@@ -31,6 +31,8 @@ More information about foreman: https://theforeman.org/
 
 Information about Puppet ENC (external node classifier): https://puppet.com/docs/puppet/latest/nodes_external.html
 
+**NOTE:** This module is only compatible with systems based on RHEL7 and RHEL8. It does not provide native support for NetworkManager, legacy network components are required.
+
 ## Usage
 All parameters for the module are contained within the main class, so for any function of the module, set the options you want. All configuration parameters can be assigned hiera. The default values are also lookuped up by hiera. See the common usages below for examples.
 

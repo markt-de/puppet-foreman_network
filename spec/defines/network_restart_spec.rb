@@ -5,7 +5,7 @@ describe 'foreman_network::network_restart' do
   let(:params) do
     {
       interface: 'eth0',
-      mange_network_interface_restart: true,
+      manage_network_interface_restart: true,
     }
   end
 
