@@ -44,11 +44,10 @@ foreman_interfaces:
     tag:
     attached_to:
     type: Interface
-
-nameservers:
-  - 192.168.65.100
 foreman_searchpath:
   - ignore.test.de
+nameservers:
+  - 192.168.65.100
 
 resolv_conf_path: /etc/resolv.conf.test_dhcp
 route_overrides:
@@ -65,8 +64,7 @@ route_overrides:
     netmask: 255.255.255.0
     network: 10.1.5.0
 
-nameservers_merge: true
-manage_resolv_conf: true
-mange_network_interface_restart: true
 manage_if_from_facts_only: true
-
+manage_network_interface_restart: true
+manage_resolv_conf: true
+nameservers_merge: true
