@@ -28,6 +28,9 @@
 # @param resolv_conf_path
 #   The path of the resolv.conf. For docker accaptance test this could be modified
 #
+# @param resolver_options
+#   ENC node parameter with key resolver_options injected by foreman
+#
 # @param route_overrides
 #   Overrides the default route provided by foreman and could also add additional static network routes.
 #   IMPORTANT: If DHCP enabled is enabled on the primary interface. All routes on the primary interface will be ignored.
@@ -46,6 +49,7 @@ class foreman_network (
   Boolean $manage_network_interface_restart,
   Boolean $manage_if_from_facts_only,
   Stdlib::Absolutepath $resolv_conf_path,
+  Array $resolver_options,
   Boolean $debug,
   Boolean $searchpath_merge,
   Array $searchpath,
@@ -93,9 +97,18 @@ class foreman_network (
     else {
       $real_searchpath = $foreman_searchpath
     }
+
+    if defined('$::resolver_options') {
+      $real_resolver_options = flatten($::resolver_options, $resolver_options)
+    }
+    else {
+      $real_resolver_options = flatten($resolver_options)
+    }
+
     $network_resolv_conf = {
       'nameservers' => $real_nameservers,
       'searchpath' => $real_searchpath,
+      'options' => $real_resolver_options,
     }
   }
 
