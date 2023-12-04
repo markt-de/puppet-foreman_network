@@ -6,6 +6,7 @@ foreman_network::route_overrides: {}
 foreman_network::manage_network_interface_restart: true
 foreman_network::manage_if_from_facts_only: true
 foreman_network::resolv_conf_path: /etc/resolv.conf
+foreman_network::resolver_options: []
 foreman_network::debug: false
 foreman_network::searchpath_merge: true
 foreman_network::searchpath: []
