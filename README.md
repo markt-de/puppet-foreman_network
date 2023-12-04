@@ -9,6 +9,7 @@
   * [Configure nameservers](#configure-nameservers)
     + [Additional nameservers](#additional-nameservers)
     + [Custom nameservers](#custom-nameservers)
+  * [Configure resolv options](#configure-resolv-options)
   * [Overwrite network routes](#overwrite-network-routes)
     + [Add static route and overwrite the default gateway on interface eth0](#add-static-route-and-overwrite-the-default-gateway-on-interface-eth0)
 - [Reference](#reference)
@@ -58,6 +59,7 @@ class { 'foreman_network':
   manage_network_interface_restart => true,
   manage_if_from_facts_only        => true,
   resolv_conf_path                 => '/etc/resolv.conf',
+  resolver_options                 => [],
   debug                            => false,
   searchpath_merge                 => true,
   searchpath                       => [],
@@ -75,6 +77,7 @@ foreman_network:
   manage_network_interface_restart: true
   manage_if_from_facts_only: true
   resolv_conf_path: /etc/resolv.conf
+  resolver_options: []
   debug: false
   searchpath_merge: true
   searchpath: []
@@ -151,6 +154,30 @@ nameserver 8.8.8.8
 nameserver 4.4.4.4
 [...]
 ```
+
+### Configure resolv options
+
+Add some resolver options to /etc/resolv.conf
+
+```
+class { 'foreman_network':
+  resolver_options => [
+    'timeout:1',
+    'rotate'
+  ],
+}
+```
+
+Using Hiera:
+
+```
+foreman_network:
+  resolver_options:
+    - timeout:1
+    - rotate
+```
+
+If a top scope variable `$resolver_options` exists (e.g. from Foreman ENC) it will be merged into your defined options here. This way you can tune your settings according to your infrastructure.
 
 ### Overwrite network routes
 
