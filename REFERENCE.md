@@ -31,6 +31,7 @@ The following parameters are available in the `foreman_network` class:
 * [`nameservers`](#-foreman_network--nameservers)
 * [`nameservers_merge`](#-foreman_network--nameservers_merge)
 * [`resolv_conf_path`](#-foreman_network--resolv_conf_path)
+* [`resolver_options`](#-foreman_network--resolver_options)
 * [`route_overrides`](#-foreman_network--route_overrides)
 * [`searchpath`](#-foreman_network--searchpath)
 * [`searchpath_merge`](#-foreman_network--searchpath_merge)
@@ -93,6 +94,12 @@ If true merges the entries the foreman dns servers with nameservers. if false th
 Data type: `Stdlib::Absolutepath`
 
 The path of the resolv.conf. For docker accaptance test this could be modified
+
+##### <a name="-foreman_network--resolver_options"></a>`resolver_options`
+
+Data type: `Array`
+
+ENC node parameter with key resolver_options injected by foreman
 
 ##### <a name="-foreman_network--route_overrides"></a>`route_overrides`
 
