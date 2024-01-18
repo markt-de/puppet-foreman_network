@@ -53,8 +53,8 @@ class foreman_network (
   Boolean $debug,
   Boolean $searchpath_merge,
   Array $searchpath,
-  Array $foreman_interfaces = $::foreman_interfaces,
-  Array $foreman_searchpath = [$::domainname],
+  Array $foreman_interfaces = $foreman_interfaces,
+  Array $foreman_searchpath = [$domainname],
 ) {
   include 'network'
 
@@ -98,8 +98,8 @@ class foreman_network (
       $real_searchpath = $foreman_searchpath
     }
 
-    if defined('$::resolver_options') {
-      $real_resolver_options = flatten($::resolver_options, $resolver_options)
+    if defined('$resolver_options') {
+      $real_resolver_options = flatten($resolver_options, $resolver_options)
     }
     else {
       $real_resolver_options = flatten($resolver_options)
