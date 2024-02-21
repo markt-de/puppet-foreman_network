@@ -53,7 +53,7 @@ class foreman_network (
   Boolean $debug,
   Boolean $searchpath_merge,
   Array $searchpath,
-  Array $foreman_interfaces = $foreman_interfaces,
+  Array $foreman_interfaces = $::foreman_interfaces,
   Array $foreman_searchpath = [$domainname], # lint:ignore:variable_scope foreman injected top scope variable
 ) {
   include 'network'
