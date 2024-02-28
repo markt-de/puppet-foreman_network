@@ -9,16 +9,16 @@
   "issues_url": "https://github.com/markt-de/puppet-foreman_network/issues",
   "dependencies": [
     {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 9.0.0 < 10.0.0"
+    },
+    {
       "name": "puppet/network",
-      "version_requirement": ">= 0.9.0 < 2.0.0"
+      "version_requirement": ">= 2.2.0 < 3.0.0"
     },
     {
       "name": "saz/resolv_conf",
-      "version_requirement": ">= 4.1.0 < 6.0.0"
-    },
-    {
-      "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 8.0.0 < 10.0.0"
+      "version_requirement": ">= 5.1.0 < 6.0.0"
     }
   ],
   "operatingsystem_support": [
