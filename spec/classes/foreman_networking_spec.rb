@@ -72,26 +72,28 @@ describe 'foreman_network' do
 
       describe 'test overrides' do
         let(:params) do
-          super().merge('route_overrides' => {
-                          'default' => {
-                            'ensure' => 'present',
-                            'gateway' => '10.241.60.253',
-                            'interface' => 'eth0',
-                            'netmask' => '255.255.255.0',
-                            'network' => '0.0.0.0',
-                          },
-                          '10.1.2.0/24' => {
-                            'ensure' => 'present',
-                            'gateway' => '10.1.2.254',
-                            'interface' => 'eth0',
-                            'netmask' => '255.255.255.0',
-                            'network' => '10.1.2.0',
-                          },
-                        },
-                        'nameservers' => [
-                          '10.241.40.13',
-                          '10.241.10.254',
-                        ])
+          super().deep_merge!(
+            'route_overrides' => {
+              'default' => {
+                'ensure' => 'present',
+                'gateway' => '10.241.60.253',
+                'interface' => 'eth0',
+                'netmask' => '255.255.255.0',
+                'network' => '0.0.0.0',
+              },
+              '10.1.2.0/24' => {
+                'ensure' => 'present',
+                'gateway' => '10.1.2.254',
+                'interface' => 'eth0',
+                'netmask' => '255.255.255.0',
+                'network' => '10.1.2.0',
+              },
+            },
+            'nameservers' => [
+              '10.241.40.13',
+              '10.241.10.254',
+            ],
+          )
         end
 
         it {
